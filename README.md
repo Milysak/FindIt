@@ -15,21 +15,36 @@ Projekt realizowany "po godzinach", nazwa robocza MakerMap - w zamyśle finalnie
 - Firebase Realtime Database,
 - Firebase Storage.
 
-## TODO
+## TODO - Ekrany
 
-### Home 
-- wiadomości,
+### Ekran startowy
+
+- filtry dot. TOP zagubionych,
+- moje zgłoszenia.
+
+### Ulubione
+
+- lista polubionych zgłoszeń.
+
+### Mapa
+
 - dodawanie zgłoszeń na mapie,
 - wgrywanie zdjęć,
-- rankingi,
-- manipulacja i rynek punktów,
-- ustawienia.
+
+### Wiadomości
+
+- wysyłanie,
+- przyjmowanie,
+- archiwizacja.
+
+### Ustawienia
+
+- zmiana hasła,
+- zmiana awataru itd.
 
 ## Zrzuty ekranu
 
 <img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-14-325_com.example.markermap.jpg" width="256">
-
-<img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-18-765_com.example.markermap.jpg" width="256">
 
 <img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-01-038_com.example.markermap.jpg" width="256">
 
