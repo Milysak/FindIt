@@ -44,10 +44,4 @@ Projekt realizowany "po godzinach", nazwa robocza MakerMap - w zamyśle finalnie
 
 ## Zrzuty ekranu
 
-<img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-14-325_com.example.markermap.jpg" width="256">
-
-<img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-01-038_com.example.markermap.jpg" width="256">
-
-<img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-03-965_com.example.markermap.jpg" width="256">
-
-<img src="https://raw.githubusercontent.com/Milysak/MarkerMap/master/Screenshot_2023-08-25-09-20-27-218_com.example.markermap.jpg" width="256">
+[Screen_recording_20240416_165103.webm](https://github.com/Milysak/FindIt/assets/72439608/481791d4-7274-47b7-9a25-700c3399b103)
