@@ -1,7 +1,7 @@
 # FindIt
 
 Projekt realizowany "po godzinach", polegający na dodawaniu na mapie zgubionych np. rzeczy.
-Natomiast inni użytkownicy po znalezieniu sa w stanie zgłosić zgubioną rzecz, a następnie wymienić korespondencję.
+Natomiast inni użytkownicy po znalezieniu są w stanie zgłosić zgubioną rzecz, a następnie wymienić między sobą korespondencję.
 
 ## Technologie
 
