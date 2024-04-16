@@ -17,6 +17,7 @@ Projekt realizowany "po godzinach", nazwa robocza MakerMap - w zamyśle finalnie
 
 ## TODO
 
+### Home 
 - wiadomości,
 - dodawanie zgłoszeń na mapie,
 - wgrywanie zdjęć,
