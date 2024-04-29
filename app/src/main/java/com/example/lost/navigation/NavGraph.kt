@@ -12,7 +12,10 @@ import com.example.lost.screens.BottomNavigation
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun NavGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = Routes.Splash.route) {
+    NavHost(
+        navController = navHostController,
+        startDestination = Routes.Splash.route
+    ) {
         composable(route = Routes.Splash.route) {
             AnimatedSplashScreen(navHostController)
         }

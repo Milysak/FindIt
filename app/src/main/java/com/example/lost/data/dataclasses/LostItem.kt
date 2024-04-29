@@ -4,5 +4,6 @@ data class LostItem(
     val id: Int,
     val name: String,
     val location: String,
-    val image: String
+    val image: String,
+    val liked: Boolean = false
 )

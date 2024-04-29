@@ -58,7 +58,11 @@ fun BottomNavigation() {
     val navController = rememberNavController()
 
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = {
+            BottomBar(
+                navController = navController
+            )
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -91,89 +95,98 @@ fun BottomBar(navController: NavHostController) {
 
     val state = rememberScrollState()
 
-    Box(
-        modifier = Modifier
-            .padding(start = 0.dp, end = 0.dp, top = 5.dp, bottom = 0.dp)
-            .clip(
-                RoundedCornerShape(
-                    topStart = 15.dp,
-                    topEnd = 15.dp
-                )
-            )
-            .height(65.dp),
-    ) {
-        Row(
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+
+    AnimatedVisibility(
+        visible = bottomBarDestination,
+        enter = fadeIn() + expandVertically(),
+        exit = fadeOut() + shrinkVertically(),
+    )
+    {
+        Box(
             modifier = Modifier
-                .background(
-                    MaterialTheme.colorScheme.onSecondary
+                .padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 15.dp,
+                        topEnd = 15.dp
+                    )
                 )
-                .fillMaxSize()
-                .horizontalScroll(state, true),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+                .height(65.dp),
         ) {
-            screens.forEach { screen ->
-                val selected =
-                    currentDestination?.hierarchy?.any { it.route == screen.route } == true
+            Row(
+                modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.onSecondary
+                    )
+                    .fillMaxSize()
+                    .horizontalScroll(state, true),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                screens.forEach { screen ->
+                    val selected =
+                        currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-                val contentColor by animateColorAsState(
-                    targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = 0.4f
-                    ),
-                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-                    label = ""
-                )
+                    val contentColor by animateColorAsState(
+                        targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.4f
+                        ),
+                        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+                        label = ""
+                    )
 
-                Box(
-                    modifier = Modifier
-                        .height(55.dp)
-                        .clip(CircleShape)
-                        .clickable(interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = {
-                                if (currentDestination?.hierarchy?.any { it.route == screen.route } == false) {
-                                    navController.navigate(screen.route) {
-                                        popUpTo(navController.graph.findStartDestination().id)
-                                        launchSingleTop = true
+                    Box(
+                        modifier = Modifier
+                            .height(55.dp)
+                            .clip(CircleShape)
+                            .clickable(interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {
+                                    if (currentDestination?.hierarchy?.any { it.route == screen.route } == false) {
+                                        navController.navigate(screen.route) {
+                                            popUpTo(navController.graph.findStartDestination().id)
+                                            launchSingleTop = true
+                                        }
                                     }
                                 }
-                            }
-                        ),
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 10.dp, end = 10.dp, top = 14.dp, bottom = 0.dp)
-                            .scale(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Bottom
+                            ),
                     ) {
-                        Icon(
-                            imageVector = if (selected) screen.filledIcon else screen.outlinedIcon,
-                            contentDescription = "icon",
-                            tint = if (selected) contentColor else contentColor,
+                        Column(
                             modifier = Modifier
-                                .scale(1.1f),
-                        )
-                        
-                        Spacer(
-                            modifier = Modifier
-                                .height(5.dp)
-                        )
-
-                        AnimatedVisibility(
-                            visible = selected,
-                            enter = fadeIn() + expandVertically(),
-                            exit = fadeOut() + shrinkVertically(),
+                                .padding(start = 10.dp, end = 10.dp, top = 14.dp, bottom = 0.dp)
+                                .scale(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Bottom
                         ) {
-                            Box(
+                            Icon(
+                                imageVector = if (selected) screen.filledIcon else screen.outlinedIcon,
+                                contentDescription = "icon",
+                                tint = if (selected) contentColor else contentColor,
                                 modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(
-                                        MaterialTheme.colorScheme.primary
-                                    )
-                                    .size(5.dp)
-                            ) {
+                                    .scale(1.1f),
+                            )
 
+                            Spacer(
+                                modifier = Modifier
+                                    .height(5.dp)
+                            )
+
+                            AnimatedVisibility(
+                                visible = selected,
+                                enter = fadeIn() + expandVertically(),
+                                exit = fadeOut() + shrinkVertically(),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .background(
+                                            MaterialTheme.colorScheme.primary
+                                        )
+                                        .size(5.dp)
+                                ) {
+
+                                }
                             }
                         }
                     }
@@ -182,41 +195,3 @@ fun BottomBar(navController: NavHostController) {
         }
     }
 }
-
-fun Modifier.shadow(
-    color: Color = Color.Black,
-    borderRadius: Dp = 0.dp,
-    blurRadius: Dp = 0.dp,
-    offsetY: Dp = 0.dp,
-    offsetX: Dp = 0.dp,
-    spread: Dp = 0f.dp,
-    modifier: Modifier = Modifier
-) = this.then(
-    modifier.drawBehind {
-        this.drawIntoCanvas {
-            val paint = Paint()
-            val frameworkPaint = paint.asFrameworkPaint()
-            val spreadPixel = spread.toPx()
-            val leftPixel = (0f - spreadPixel) + offsetX.toPx()
-            val topPixel = (0f - spreadPixel) + offsetY.toPx()
-            val rightPixel = (this.size.width + spreadPixel)
-            val bottomPixel = (this.size.height + spreadPixel)
-
-            if (blurRadius != 0.dp) {
-                frameworkPaint.maskFilter =
-                    (BlurMaskFilter(blurRadius.toPx(), BlurMaskFilter.Blur.NORMAL))
-            }
-
-            frameworkPaint.color = color.toArgb()
-            it.drawRoundRect(
-                left = leftPixel,
-                top = topPixel,
-                right = rightPixel,
-                bottom = bottomPixel,
-                radiusX = borderRadius.toPx(),
-                radiusY = borderRadius.toPx(),
-                paint
-            )
-        }
-    }
-)

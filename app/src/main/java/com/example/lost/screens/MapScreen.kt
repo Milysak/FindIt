@@ -29,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.lost.components.map.FloatingActionButtonMenu
 import com.example.lost.components.map.TopBarMenu
 import com.example.lost.mapstyles.DarkMapStyle
 import com.example.lost.mapstyles.LightMapStyle
+import com.example.lost.navigation.MapRoutes
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -42,7 +44,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun MapScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController
 ) {
     var properties by mutableStateOf(
         MapProperties(
@@ -64,7 +67,9 @@ fun MapScreen(
         floatingActionButton = {
             FloatingActionButtonMenu(
                 modifier = modifier
-            )
+            ) {
+                navHostController.navigate(MapRoutes.AddLostItem.route)
+            }
         },
         topBar = {
             TopBarMenu()

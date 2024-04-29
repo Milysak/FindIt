@@ -31,22 +31,21 @@ import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.StarRate
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -71,6 +70,7 @@ import com.example.lost.R
 import com.example.lost.data.dataclasses.LostItem
 import com.example.lost.screens.LoadingAnimation
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,25 +87,21 @@ fun SwipeLostInfoCard(
         mutableStateOf(true)
     }
 
-    val dismissState = rememberDismissState(
-        confirmValueChange = {
-            if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-                true
-            } else false
-        }, positionalThreshold = { 150.dp.toPx() }
+    val dismissState = rememberSwipeToDismissBoxState(
+        positionalThreshold = { 200f }
     )
 
     val alpha by animateFloatAsState(
         targetValue = if (
-            dismissState.isDismissed(DismissDirection.EndToStart)
+            dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart
             ||
-            dismissState.isDismissed(DismissDirection.StartToEnd)
+            dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd
         )
             1f
         else
             0f,
         animationSpec = tween(
-            durationMillis = 100,
+            durationMillis = 200,
             easing = FastOutSlowInEasing
         ),
         label = ""
@@ -120,13 +116,9 @@ fun SwipeLostInfoCard(
             shrinkTowards = Alignment.Top
         ) + fadeOut()
     ) {
-        SwipeToDismiss(
+        SwipeToDismissBox(
             state = dismissState,
-            directions = setOf(
-                DismissDirection.EndToStart,
-                DismissDirection.StartToEnd
-            ),
-            background = {
+            backgroundContent = {
                 /*val color by animateColorAsState(
                     when (dismissState.dismissDirection) {
                         DismissDirection.EndToStart -> if (isSystemInDarkTheme()) Color(0xFFFF5252) else Color(
@@ -144,15 +136,15 @@ fun SwipeLostInfoCard(
                         .clip(RoundedCornerShape(12.dp))
                         .background(
                             when (dismissState.dismissDirection) {
-                                DismissDirection.EndToStart -> Color(0xFFFF5252)
-                                DismissDirection.StartToEnd -> Color(0xFF00E676)
+                                SwipeToDismissBoxValue.EndToStart -> Color(0xFFFF5252)
+                                SwipeToDismissBoxValue.StartToEnd -> Color(0xFF00E676)
                                 else -> MaterialTheme.colorScheme.onSecondary
                             }
                         ),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    if (dismissState.dismissDirection == DismissDirection.EndToStart) {
+                    if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
                         Text(
                             modifier = Modifier
                                 .padding(start = 16.dp)
@@ -183,7 +175,7 @@ fun SwipeLostInfoCard(
                                 modifier = Modifier
                                     .padding(end = 16.dp)
                                     .clickable {
-                                        if (dismissState.isDismissed(DismissDirection.EndToStart))
+                                        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart)
                                             show = false
                                     },
                                 imageVector = Icons.Default.Delete,
@@ -191,7 +183,7 @@ fun SwipeLostInfoCard(
                                 tint = Color(0xFF861414)
                             )
                         }
-                    } else if (dismissState.dismissDirection == DismissDirection.StartToEnd) {
+                    } else if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
                         Row {
                             Icon(
                                 modifier = Modifier
@@ -232,7 +224,7 @@ fun SwipeLostInfoCard(
                     }
                 }
             },
-            dismissContent = {
+            content = {
                 LostInfoCard(
                     item = item,
                     onItemClicked = {
@@ -255,8 +247,8 @@ fun SwipeLostInfoCard(
     }
 
     LaunchedEffect(
-        key1 = dismissState.isDismissed(DismissDirection.EndToStart),
-        key2 = dismissState.isDismissed(DismissDirection.StartToEnd)
+        key1 = dismissState.currentValue == SwipeToDismissBoxValue.EndToStart,
+        key2 = dismissState.currentValue == SwipeToDismissBoxValue.StartToEnd
     ) {
         delay(5000)
         dismissState.reset()
@@ -285,7 +277,9 @@ fun LostInfoCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             val painter = rememberAsyncImagePainter(item.image)
             val state = painter.state
@@ -299,62 +293,63 @@ fun LostInfoCard(
                 LoadingAnimation()
             }
 
-            Image(
-                modifier = Modifier
-                    .size(75.dp, 75.dp)
-                    .alpha(transition)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(
-                        MaterialTheme.colorScheme.onBackground.copy(
-                            alpha = 0.2f
-                        )
-                    ),
-                painter = painter,
-                alignment = Alignment.CenterStart,
-                contentDescription = "",
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = item.name,
-                    modifier = Modifier.padding(0.dp, 0.dp, 12.dp, 0.dp),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+            Row {
+                Image(
+                    modifier = Modifier
+                        .size(75.dp, 75.dp)
+                        .alpha(transition)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            MaterialTheme.colorScheme.onBackground.copy(
+                                alpha = 0.2f
+                            )
+                        ),
+                    painter = painter,
+                    alignment = Alignment.CenterStart,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
                 )
 
-                Row(
-                    verticalAlignment = Alignment.Bottom
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-
-                    Icon(
-                        imageVector = Icons.Rounded.LocationOn,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp, 16.dp),
-                        tint = Color(0xFFE53935)
-                    )
-
                     Text(
-                        text = item.location,
-                        modifier = Modifier.padding(4.dp, 6.dp, 12.dp, 0.dp),
+                        text = item.name,
+                        modifier = Modifier.padding(0.dp, 0.dp, 12.dp, 0.dp),
                         color = MaterialTheme.colorScheme.onBackground,
-                        fontSize = 12.sp
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
                     )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Rounded.LocationOn,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp, 16.dp),
+                            tint = Color(0xFFE53935)
+                        )
+
+                        Text(
+                            text = item.location,
+                            modifier = Modifier.padding(4.dp, 0.dp, 12.dp, 0.dp),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                //
-            }
+
+            Icon(
+                imageVector = Icons.Rounded.ChevronRight,
+                contentDescription = null
+            )
         }
     }
 }

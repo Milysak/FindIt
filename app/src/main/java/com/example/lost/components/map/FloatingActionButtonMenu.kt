@@ -11,11 +11,14 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun FloatingActionButtonMenu(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     FloatingActionButton(
         modifier = modifier,
-        onClick = { /*TODO*/ },
+        onClick = {
+            onClick()
+        },
         containerColor = MaterialTheme.colorScheme.onSecondary,
         contentColor = MaterialTheme.colorScheme.secondary
     ) {

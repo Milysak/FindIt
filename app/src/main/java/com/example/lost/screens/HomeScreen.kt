@@ -74,6 +74,17 @@ import com.example.lost.data.dataclasses.LostItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+val imagesUrls = listOf(
+    "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/220429/pexels-photo-220429.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/1478685/pexels-photo-1478685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/312839/pexels-photo-312839.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/8498872/pexels-photo-8498872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/20099418/pexels-photo-20099418/free-photo-of-morze-woda-ocean-zwierze.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "https://images.pexels.com/photos/20174739/pexels-photo-20174739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+)
+
 @SuppressLint("ResourceType")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -111,17 +122,6 @@ fun HomeScreen() {
             "Najstarsze",
             if (isSystemInDarkTheme()) Color(0xFFFFB74D) else Color(0xFFFFAB00)
         ),
-    )
-
-    val imagesUrls = listOf(
-        "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/220429/pexels-photo-220429.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/1478685/pexels-photo-1478685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/312839/pexels-photo-312839.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/8498872/pexels-photo-8498872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/20099418/pexels-photo-20099418/free-photo-of-morze-woda-ocean-zwierze.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/20174739/pexels-photo-20174739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     )
 
     var currentSelection by remember {
@@ -271,7 +271,7 @@ fun HomeScreen() {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
+                    .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Column(
                     modifier = Modifier
